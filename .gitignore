@@ -1,0 +1,47 @@
+# Node.js (React Frontend)
+frontend/node_modules/
+frontend/.env
+frontend/dist/
+frontend/build/
+frontend/.next/
+frontend/.DS_Store
+
+# Vite/CRA cache
+frontend/.vite/
+frontend/.cache/
+frontend/.parcel-cache/
+
+# PHP (Backend)
+backend/vendor/
+backend/.env
+backend/.DS_Store
+
+# Docker volumes/dados locais
+db_data/
+*.pid
+*.log
+
+# SQL dump files
+*.sql
+
+# Editor config
+*.swp
+*.swo
+.idea/
+.vscode/
+*.code-workspace
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+ehthumbs.db
+
+# Backup files
+*.bak
+*.tmp
+*.orig
+*.old
+
+# Logs gerais
+*.log
+logs/
