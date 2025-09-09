@@ -21,9 +21,6 @@ db_data/
 *.pid
 *.log
 
-# SQL dump files
-*.sql
-
 # Editor config
 *.swp
 *.swo
