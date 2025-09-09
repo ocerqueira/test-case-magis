@@ -38,13 +38,11 @@ class BebidasController
     public function volumesTotais()
     {
         try {
-            $pdo = \app\database\Conexao::getConexao();
-            $sql = "SELECT tipo_bebida, SUM(volume_ml) as volume_total
-                    FROM bebidas
-                    WHERE ativa = 1
-                    GROUP BY tipo_bebida";
+            $pdo = Conexao::getConexao();
+            $sql = "SELECT tipo_secao as tipo_bebida, volume_ocupado as volume_total
+                    FROM secoes
+                    WHERE ativa = 1";
             $stmt = $pdo->query($sql);
-            // Retorna formato: [tipo_bebida => volume_total, ...]
             $dados = [];
             while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
                 $dados[$row['tipo_bebida']] = (int)$row['volume_total'];

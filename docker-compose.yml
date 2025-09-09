@@ -3,21 +3,22 @@ version: "3.8"
 services:
   db:
     image: mysql:8.0
-    container_name: estoque_db
+    container_name: magis5_db_estoque
     environment:
       MYSQL_DATABASE: sistema_estoque_bebidas
       MYSQL_ROOT_PASSWORD: root
     ports:
-      - "4307:3306"    # Host: 4307 → Container: 3306
+      - "4307:3306" 
     volumes:
       - ./db_data:/var/lib/mysql
       - ./sql:/docker-entrypoint-initdb.d
     restart: always
 
   php:
-    build: .
+    container_name: magis5_api
+    build: ./backend
     volumes:
-      - ./:/app
+      - ./backend:/app
     working_dir: /app
     command: php -S 0.0.0.0:8000 -t .
     ports:
@@ -27,7 +28,7 @@ services:
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
-    container_name: estoque_phpmyadmin
+    container_name: magis5_db_phpmyadmin
     environment:
       PMA_HOST: db
       PMA_PORT: 3306   # Sempre 3306 dentro do Docker!
@@ -38,3 +39,17 @@ services:
     depends_on:
       - db
     restart: always
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: magis5_frontend
+    working_dir: /app
+    volumes:
+      - ./frontend:/app
+    ports:
+      - "8080:80"  # ou ajuste para sua porta do dev server
+    environment:
+      - CHOKIDAR_USEPOLLING=true  # Ajuda com live reload no Windows/WSL
+    depends_on:
+      - php
