@@ -12,7 +12,12 @@ class Historico
     {
         try {
             $pdo = Conexao::getConexao();
-            $sql = "SELECT * FROM movimentos";
+            $sql = "SELECT m.*, (b.volume_ml * m.quantidade) as volume_ml, 
+                       b.nome as bebida, 
+                       s.secao as secao
+                FROM movimentos m 
+                LEFT JOIN bebidas b ON m.bebida_id = b.id 
+                LEFT JOIN secoes s ON m.secao_id = s.id";
             $conds = [];
             $order = " ORDER BY data_hora DESC";
             $binds = [];
@@ -66,7 +71,14 @@ class Historico
         if (!$secao) throw new \Exception("Seção não encontrada.");
         if ($secao['tipo_secao'] !== $dados['tipo_bebida']) throw new \Exception("Tipo de bebida não compatível com a seção.");
 
-        $volume = (int)$dados['volume_ml'];
+        // Busca o volume_ml da bebida
+        $stmt = $pdo->prepare("SELECT volume_ml FROM bebidas WHERE id = ?");
+        $stmt->execute([$dados['bebida_id']]);
+        $bebida = $stmt->fetch(PDO::FETCH_ASSOC);
+        if (!$bebida) throw new \Exception("Bebida não encontrada.");
+
+        $volume = (int)$bebida['volume_ml'] * (int)$dados['quantidade'];
+
         $volume_ocupado = (int)$secao['volume_ocupado'];
 
         if ($dados['operacao'] === 'ENTRADA') {
@@ -84,18 +96,17 @@ class Historico
         }
 
         // 2. Insere movimento
-        $sql = "INSERT INTO movimentos (operacao, bebida_id, quantidade, volume_ml, tipo_bebida, secao_id, responsavel, observacao)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO movimentos (operacao, bebida_id, quantidade, tipo_bebida, secao_id, responsavel, observacao)
+                VALUES (?, ?, ?, ?, ?, ?, ?)";
         $stmt = $pdo->prepare($sql);
         $stmt->execute([
             $dados['operacao'],
             $dados['bebida_id'],
             $dados['quantidade'],
-            $dados['volume_ml'],
             $dados['tipo_bebida'],
             $dados['secao_id'],
             $dados['responsavel'],
-            $dados['observacao'] ?? null
+            $dados['descricao'] ?? null
         ]);
 
         // 3. Atualiza volume ocupado da seção

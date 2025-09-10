@@ -5,7 +5,7 @@ function BeverageForm({ secoes, onSubmit }) {
     nome: "",
     marca: "",
     tipo_bebida: "ALCOOLICA",
-    secao: secoes?.[0]?.secao || "",
+    secao_id: secoes?.[0]?.id || "", // ← MUDANÇA: secao_id ao invés de secao
     volume_ml: "",
   });
 
@@ -21,7 +21,7 @@ function BeverageForm({ secoes, onSubmit }) {
       nome: "",
       marca: "",
       tipo_bebida: "ALCOOLICA",
-      secao: secoes?.[0]?.secao || "",
+      secao_id: secoes?.[0]?.id || "", // ← MUDANÇA: secao_id no reset também
       volume_ml: "",
     });
   }
@@ -60,13 +60,13 @@ function BeverageForm({ secoes, onSubmit }) {
       </select>
       <select
         className="border p-2 rounded"
-        name="secao"
-        value={form.secao}
+        name="secao_id" // ← MUDANÇA: name="secao_id"
+        value={form.secao_id} // ← MUDANÇA: value={form.secao_id}
         onChange={handleChange}
         required
       >
-        {secoes.map((s, idx) => (
-          <option key={idx} value={s.secao}>{s.secao}</option>
+        {secoes.map((s) => (
+          <option key={s.id} value={s.id}>{s.secao}</option> // ← MUDANÇA: value={s.id} e key={s.id}
         ))}
       </select>
       <input

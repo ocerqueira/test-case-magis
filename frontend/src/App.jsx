@@ -1,179 +1,111 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import SectionCard from './components/SectionCard';
 import BeverageForm from './components/BeverageForm';
 import MovementForm from './components/MovementForm';
 import MovementsTable from './components/MovementsTable';
 import SectionForm from './components/SectionForm';
-
-
 import Modal from './components/Modal';
-
-
-
+import SectionDetailsModal from './components/SectionDetails';
 
 function App() {
-  const secoes = [
-    { secao: 'Cervejas', capacidade_ml: 10000, volume_ocupado: 3500 },
-    { secao: 'Vinhos', capacidade_ml: 8000, volume_ocupado: 2000 },
-    { secao: 'Refrigerantes', capacidade_ml: 12000, volume_ocupado: 7000 },
-  ];
+  // States
+  const [secoes, setSecoes] = useState([]);
+  const [bebidas, setBebidas] = useState([]);
+  const [movimentos, setMovimentos] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const bebidas = [
-    { nome: "Skol", marca: "Ambev", tipo_bebida: "ALCOOLICA", secao: "Cervejas", volume_ml: 350 },
-    { nome: "Coca-Cola", marca: "Coca-Cola", tipo_bebida: "NAO_ALCOOLICA", secao: "Refrigerantes", volume_ml: 600 },
-  ];
-
-  const movimentos = [
-    {
-      data_hora: "2025-09-09 14:21",
-      operacao: "ENTRADA",
-      bebida: "Skol",
-      secao: "Cervejas",
-      volume: 1000,
-      responsavel: "Lucas",
-      observacao: "Reabastecimento semanal",
-    },
-    {
-      data_hora: "2025-09-09 14:23",
-      operacao: "SAIDA",
-      bebida: "Coca-Cola",
-      secao: "Refrigerantes",
-      volume: 500,
-      responsavel: "Lucas",
-      observacao: "Venda balcão",
-    },
-    {
-      data_hora: "2025-09-09 14:23",
-      operacao: "SAIDA",
-      bebida: "Coca-Cola",
-      secao: "Refrigerantes",
-      volume: 500,
-      responsavel: "Lucas",
-      observacao: "Venda balcão",
-    },
-    {
-      data_hora: "2025-09-09 14:23",
-      operacao: "SAIDA",
-      bebida: "Coca-Cola",
-      secao: "Refrigerantes",
-      volume: 500,
-      responsavel: "Lucas",
-      observacao: "Venda balcão",
-    },
-    {
-      data_hora: "2025-09-09 14:23",
-      operacao: "SAIDA",
-      bebida: "Coca-Cola",
-      secao: "Refrigerantes",
-      volume: 500,
-      responsavel: "Lucas",
-      observacao: "Venda balcão",
-    },
-    {
-      data_hora: "2025-09-09 14:23",
-      operacao: "SAIDA",
-      bebida: "Coca-Cola",
-      secao: "Refrigerantes",
-      volume: 500,
-      responsavel: "Lucas",
-      observacao: "Venda balcão",
-    },
-    {
-      data_hora: "2025-09-09 14:23",
-      operacao: "SAIDA",
-      bebida: "Coca-Cola",
-      secao: "Refrigerantes",
-      volume: 500,
-      responsavel: "Lucas",
-      observacao: "Venda balcão",
-    },
-    {
-      data_hora: "2025-09-09 14:23",
-      operacao: "SAIDA",
-      bebida: "Coca-Cola",
-      secao: "Refrigerantes",
-      volume: 500,
-      responsavel: "Lucas",
-      observacao: "Venda balcão",
-    },
-    {
-      data_hora: "2025-09-09 14:23",
-      operacao: "SAIDA",
-      bebida: "Coca-Cola",
-      secao: "Refrigerantes",
-      volume: 500,
-      responsavel: "Lucas",
-      observacao: "Venda balcão",
-    },
-    {
-      data_hora: "2025-09-09 14:23",
-      operacao: "SAIDA",
-      bebida: "Coca-Cola",
-      secao: "Refrigerantes",
-      volume: 500,
-      responsavel: "Lucas",
-      observacao: "Venda balcão",
-    },
-    {
-      data_hora: "2025-09-09 14:23",
-      operacao: "SAIDA",
-      bebida: "Coca-Cola",
-      secao: "Refrigerantes",
-      volume: 500,
-      responsavel: "Lucas",
-      observacao: "Venda balcão",
-    },
-    {
-      data_hora: "2025-09-09 14:23",
-      operacao: "SAIDA",
-      bebida: "Coca-Cola",
-      secao: "Refrigerantes",
-      volume: 500,
-      responsavel: "Lucas",
-      observacao: "Venda balcão",
-    },
-    {
-      data_hora: "2025-09-09 14:23",
-      operacao: "SAIDA",
-      bebida: "Coca-Cola",
-      secao: "Refrigerantes",
-      volume: 500,
-      responsavel: "Lucas",
-      observacao: "Venda balcão",
-    },
-    {
-      data_hora: "2025-09-09 14:23",
-      operacao: "SAIDA",
-      bebida: "Coca-Cola",
-      secao: "Refrigerantes",
-      volume: 500,
-      responsavel: "Lucas",
-      observacao: "Venda balcão",
-    },
-    {
-      data_hora: "2025-09-09 14:23",
-      operacao: "SAIDA",
-      bebida: "Coca-Cola",
-      secao: "Refrigerantes",
-      volume: 500,
-      responsavel: "Lucas",
-      observacao: "Venda balcão",
-    },
-  ];
-
-  // Controle dos modais
+  // Modals
   const [openBebida, setOpenBebida] = useState(false);
   const [openMov, setOpenMov] = useState(false);
   const [openSecao, setOpenSecao] = useState(false);
+  const [openDetalhes, setOpenDetalhes] = useState(false);
+  const [secaoSelecionada, setSecaoSelecionada] = useState(null);
 
+  // Carregar dados da API ao abrir a tela
+  useEffect(() => {
+    Promise.all([
+      fetch('http://localhost:8002/secoes').then(res => res.json()),
+      fetch('http://localhost:8002/bebidas').then(res => res.json()),
+      fetch('http://localhost:8002/historico').then(res => res.json()),
+    ])
+    .then(([secoesData, bebidasData, movimentosData]) => {
+      setSecoes(secoesData);
+      setBebidas(bebidasData);
+      setMovimentos(movimentosData);
+      setLoading(false);
+    })
+    .catch(() => setLoading(false)); // handle errors as needed
+  }, []);
+
+  // Helpers para recarregar (depois de cadastrar algo novo)
+  const reloadSecoes = () =>
+    fetch('http://localhost:8002/secoes')
+      .then(res => res.json())
+      .then(data => setSecoes(data));
+  const reloadBebidas = () =>
+    fetch('http://localhost:8002/bebidas')
+      .then(res => res.json())
+      .then(data => setBebidas(data));
+  const reloadMovimentos = () =>
+    fetch('http://localhost:8002/historico')
+      .then(res => res.json())
+      .then(data => setMovimentos(data));
+
+  // Handlers dos formulários
   function handleAddBebida(data) {
-    alert(`Bebida cadastrada!\n${JSON.stringify(data, null, 2)}`);
-    setOpenBebida(false);
+    fetch('http://localhost:8002/bebidas', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    })
+      .then(res => res.json())
+      .then(() => {
+        reloadBebidas();
+        setOpenBebida(false);
+      })
+      .catch(() => alert('Erro ao cadastrar bebida'));
   }
 
   function handleMovimentacao(data) {
-    alert(`Movimentação lançada!\n${JSON.stringify(data, null, 2)}`);
-    setOpenMov(false);
+    fetch('http://localhost:8002/historico', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    })
+      .then(res => res.json())
+      .then(() => {
+        reloadMovimentos();
+        reloadSecoes(); // Para atualizar o volume_ocupado das seções
+        setOpenMov(false);
+      })
+      .catch(() => alert('Erro ao registrar movimentação'));
+  }
+
+   function handleDetalhesSecao(secao) {
+    setSecaoSelecionada(secao);
+    setOpenDetalhes(true);
+  }
+
+  function handleAddSecao(data) {
+    fetch('http://localhost:8002/secoes', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    })
+      .then(res => res.json())
+      .then(() => {
+        reloadSecoes();
+        setOpenSecao(false);
+      })
+      .catch(() => alert('Erro ao cadastrar seção'));
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <span className="text-xl">Carregando dados...</span>
+      </div>
+    );
   }
 
   return (
@@ -184,10 +116,10 @@ function App() {
         </h1>
 
         <div className="flex flex-wrap gap-4 mb-4 w-full justify-center">
-          {secoes.map((s, idx) => (
-            <SectionCard key={idx} secao={s} />
-          ))}
-        </div>
+        {secoes.map((s) => (
+          <SectionCard key={s.id} secao={s} onDetalhes={handleDetalhesSecao} />
+        ))}
+      </div>
 
         <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-8 w-full justify-center items-center">
           <button
@@ -203,11 +135,11 @@ function App() {
             Lançar Movimentação
           </button>
           <button
-    className="bg-indigo-600 text-white px-4 py-2 rounded shadow hover:bg-indigo-700"
-    onClick={() => setOpenSecao(true)}
-  >
-    Cadastrar Seção
-  </button>
+            className="bg-indigo-600 text-white px-4 py-2 rounded shadow hover:bg-indigo-700"
+            onClick={() => setOpenSecao(true)}
+          >
+            Cadastrar Seção
+          </button>
         </div>
 
         <div className="overflow-x-auto w-full">
@@ -224,13 +156,15 @@ function App() {
         </Modal>
 
         <Modal isOpen={openSecao} onClose={() => setOpenSecao(false)}>
-  <SectionForm onSubmit={(data) => {
-    alert(`Seção cadastrada!\n${JSON.stringify(data, null, 2)}`);
-    setOpenSecao(false);
-    // Aqui depois você adiciona a seção ao estado das seções, se quiser!
-  }} />
-</Modal>
+          <SectionForm onSubmit={handleAddSecao} />
+        </Modal>
 
+        <SectionDetailsModal 
+  isOpen={openDetalhes} 
+  onClose={() => setOpenDetalhes(false)}
+  secao={secaoSelecionada}
+  bebidas={bebidas}
+/>
       </div>
     </div>
   );

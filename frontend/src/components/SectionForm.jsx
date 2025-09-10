@@ -3,8 +3,7 @@ import { useState } from "react";
 function SectionForm({ onSubmit }) {
   const [form, setForm] = useState({
     secao: "",
-    tipo_secao: "ALCOOLICA",
-    capacidade_ml: "",
+    tipo_secao: "ALCOOLICA"
   });
 
   function handleChange(e) {
@@ -17,8 +16,7 @@ function SectionForm({ onSubmit }) {
     if (onSubmit) onSubmit(form);
     setForm({
       secao: "",
-      tipo_secao: "ALCOOLICA",
-      capacidade_ml: "",
+      tipo_secao: "ALCOOLICA"
     });
   }
 
@@ -46,16 +44,6 @@ function SectionForm({ onSubmit }) {
         <option value="ALCOOLICA">Alcoólica</option>
         <option value="NAO_ALCOOLICA">Não alcoólica</option>
       </select>
-      <input
-        className="border p-2 rounded"
-        name="capacidade_ml"
-        placeholder="Capacidade total (ml)"
-        type="number"
-        value={form.capacidade_ml}
-        onChange={handleChange}
-        required
-        min={100}
-      />
       <button
         type="submit"
         className="bg-indigo-600 text-white rounded px-4 py-2 hover:bg-indigo-700"

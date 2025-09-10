@@ -3,11 +3,12 @@ import { useState } from "react";
 function MovementForm({ bebidas, secoes, onSubmit }) {
   const [form, setForm] = useState({
     operacao: "ENTRADA",
-    bebida: bebidas?.[0]?.nome || "",
-    secao: secoes?.[0]?.secao || "",
-    volume: "",
+    bebida_id: bebidas?.[0]?.id || "",
+    secao_id: secoes?.[0]?.id || "",
+    quantidade: "",
     responsavel: "",
-    observacao: "",
+    descricao: "",
+    tipo_bebida: "ALCOOLICA", // ← CAMPO FALTANDO
   });
 
   function handleChange(e) {
@@ -20,11 +21,12 @@ function MovementForm({ bebidas, secoes, onSubmit }) {
     if (onSubmit) onSubmit(form);
     setForm({
       operacao: "ENTRADA",
-      bebida: bebidas?.[0]?.nome || "",
-      secao: secoes?.[0]?.secao || "",
-      volume: "",
+      bebida_id: bebidas?.[0]?.id || "",
+      secao_id: secoes?.[0]?.id || "",
+      quantidade: "",
       responsavel: "",
-      observacao: "",
+      descricao: "",
+      tipo_bebida: "ALCOOLICA", // ← RESETAR TAMBÉM
     });
   }
 
@@ -35,7 +37,6 @@ function MovementForm({ bebidas, secoes, onSubmit }) {
     >
       <h2 className="text-xl font-bold mb-2">Lançar movimentação</h2>
       <select
-        className="border p-2 rounded"
         name="operacao"
         value={form.operacao}
         onChange={handleChange}
@@ -45,51 +46,59 @@ function MovementForm({ bebidas, secoes, onSubmit }) {
         <option value="SAIDA">Saída</option>
       </select>
       <select
-        className="border p-2 rounded"
-        name="bebida"
-        value={form.bebida}
+        name="bebida_id"
+        value={form.bebida_id}
         onChange={handleChange}
         required
       >
-        {bebidas.map((b, idx) => (
-          <option key={idx} value={b.nome}>{b.nome}</option>
+        {bebidas.map((b) => (
+          <option key={b.id} value={b.id}>{b.nome}</option>
         ))}
       </select>
       <select
-        className="border p-2 rounded"
-        name="secao"
-        value={form.secao}
+        name="secao_id"
+        value={form.secao_id}
         onChange={handleChange}
         required
       >
-        {secoes.map((s, idx) => (
-          <option key={idx} value={s.secao}>{s.secao}</option>
+        {secoes.map((s) => (
+          <option key={s.id} value={s.id}>{s.secao}</option>
         ))}
       </select>
-      <input
-        className="border p-2 rounded"
-        name="volume"
-        placeholder="Volume (ml)"
-        type="number"
-        value={form.volume}
+      
+      {/* ← CAMPO NOVO */}
+      <select
+        name="tipo_bebida"
+        value={form.tipo_bebida}
         onChange={handleChange}
         required
+      >
+        <option value="ALCOOLICA">Alcoólica</option>
+        <option value="NAO_ALCOOLICA">Não alcoólica</option>
+      </select>
+      
+      
+      <input
+        name="quantidade"
+        type="number"
+        value={form.quantidade}
+        onChange={handleChange}
+        required
+        placeholder="Quantidade"
         min={1}
       />
       <input
-        className="border p-2 rounded"
         name="responsavel"
-        placeholder="Responsável"
         value={form.responsavel}
         onChange={handleChange}
         required
+        placeholder="Responsável"
       />
       <input
-        className="border p-2 rounded"
-        name="observacao"
-        placeholder="Observação (opcional)"
-        value={form.observacao}
+        name="descricao"
+        value={form.descricao}
         onChange={handleChange}
+        placeholder="Descrição (opcional)"
       />
       <button
         type="submit"

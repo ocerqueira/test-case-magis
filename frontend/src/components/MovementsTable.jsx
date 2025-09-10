@@ -38,7 +38,7 @@ function MovementsTable({ movimentos }) {
                 </td>
                 <td>{mov.bebida}</td>
                 <td>{mov.secao}</td>
-                <td>{mov.volume}</td>
+                <td>{mov.volume_ml}</td>
                 <td>{mov.responsavel}</td>
                 <td>{mov.observacao}</td>
               </tr>

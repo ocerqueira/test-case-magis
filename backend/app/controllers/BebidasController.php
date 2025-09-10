@@ -2,7 +2,9 @@
 namespace app\controllers;
 use app\models\Bebida;
 use Flight;
-use app\database\Cconexao;
+use app\database\Conexao;
+
+use PDO;
 
 
 

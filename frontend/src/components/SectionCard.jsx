@@ -1,10 +1,16 @@
-function SectionCard({ secao }) {
+function SectionCard({ secao, onDetalhes }) {
   const { secao: nome, capacidade_ml, volume_ocupado } = secao;
   const pctLivre = ((capacidade_ml - volume_ocupado) / capacidade_ml) * 100;
 
   return (
     <div className="bg-white rounded-lg shadow p-4 flex flex-col items-start gap-2 w-full max-w-xs sm:max-w-sm md:max-w-md">
       <h2 className="text-lg font-bold">{nome}</h2>
+      <button
+          onClick={() => onDetalhes(secao)}
+          className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+        >
+          Detalhes
+        </button>
       <div className="flex items-center gap-2">
         <span className="font-semibold">Volume:</span>
         <span>{volume_ocupado} / {capacidade_ml} ml</span>

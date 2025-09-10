@@ -1,7 +1,5 @@
-CREATE DATABASE sistema_estoque_bebidas;
-USE sistema_estoque_bebidas;
 
-CREATE TABLE IF NOT EXISTS secoes (
+CREATE TABLE IF NOT EXISTS sistema_estoque_bebidas.secoes (
     id INT AUTO_INCREMENT PRIMARY KEY,
     secao VARCHAR(40) NOT NULL,
     tipo_secao ENUM('ALCOOLICA', 'NAO_ALCOOLICA') NOT NULL UNIQUE,
@@ -11,7 +9,7 @@ CREATE TABLE IF NOT EXISTS secoes (
     criada_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS bebidas (
+CREATE TABLE IF NOT EXISTS sistema_estoque_bebidas.bebidas (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(60) NOT NULL,
     marca VARCHAR(50) NOT NULL,
@@ -23,12 +21,12 @@ CREATE TABLE IF NOT EXISTS bebidas (
     FOREIGN KEY (secao_id) REFERENCES secoes(id)
 );
 
-CREATE TABLE IF NOT EXISTS movimentos (
+CREATE TABLE IF NOT EXISTS sistema_estoque_bebidas.movimentos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     data_hora DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     operacao ENUM('ENTRADA', 'SAIDA') NOT NULL,
     bebida_id INT NOT NULL,
-    volume INT NOT NULL,
+    quantidade INT NOT NULL,
     tipo_bebida ENUM('ALCOOLICA', 'NAO_ALCOOLICA') NOT NULL,
     secao_id INT NOT NULL,
     responsavel VARCHAR(100) NOT NULL,
