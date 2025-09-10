@@ -47,19 +47,14 @@ class SecoesController
             throw new \Exception("Tipo de seção inválido.");
         }
 
-        // Garanta volume_ocupado inicial = 0
+        
         $dados['volume_ocupado'] = 0;
 
         // Agora chama o Model
         $id = Secao::criar($dados);
         Flight::json(['mensagem' => 'Seção criada com sucesso!', 'id' => $id], 201);
     } catch (\Exception $e) {
-        // Captura erro de UNIQUE e retorna mensagem clara
-        if (str_contains($e->getMessage(), 'UNIQUE')) {
-            Flight::json(['erro' => 'Já existe uma seção deste tipo.'], 400);
-        } else {
             Flight::json(['erro' => $e->getMessage()], 400);
-        }
     }
 }
 

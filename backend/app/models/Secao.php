@@ -7,7 +7,7 @@ use PDOException;
 
 class Secao
 {
-    // Retorna todas as seções (ativas por padrão)
+    
     public static function listar($apenasAtivas = true)
     {
         try {

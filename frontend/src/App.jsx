@@ -34,7 +34,7 @@ function App() {
       setMovimentos(movimentosData);
       setLoading(false);
     })
-    .catch(() => setLoading(false)); // handle errors as needed
+    .catch(() => setLoading(false)); 
   }, []);
 
   // Helpers para recarregar (depois de cadastrar algo novo)
@@ -75,7 +75,7 @@ function App() {
       .then(res => res.json())
       .then(() => {
         reloadMovimentos();
-        reloadSecoes(); // Para atualizar o volume_ocupado das seções
+        reloadSecoes(); 
         setOpenMov(false);
       })
       .catch(() => alert('Erro ao registrar movimentação'));

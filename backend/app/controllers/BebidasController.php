@@ -62,7 +62,7 @@ class BebidasController
             $dados = Flight::request()->data->getData();
             $pdo = Conexao::getConexao();
 
-            // 1️⃣ Buscar tipo da seção e capacidade
+            // Buscar tipo da seção e capacidade
             $stmt = $pdo->prepare("SELECT tipo_secao, capacidade_ml FROM secoes WHERE id = ?");
             $stmt->execute([$dados['secao_id']]);
             $secao = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -71,12 +71,12 @@ class BebidasController
                 throw new \Exception("Seção não encontrada.");
             }
 
-            // 2️⃣ Não pode misturar tipos
+            // Não pode misturar tipos
             if ($secao['tipo_secao'] !== $dados['tipo_bebida']) {
                 throw new \Exception("Tipo de bebida não compatível com a seção.");
             }
 
-            // 3️⃣ Não pode ultrapassar capacidade
+            // Não pode ultrapassar capacidade
             $stmt = $pdo->prepare("SELECT COALESCE(SUM(volume_ml), 0) as ocupado FROM bebidas WHERE secao_id = ? AND ativa = 1");
             $stmt->execute([$dados['secao_id']]);
             $ocupado = (int) $stmt->fetchColumn();
@@ -86,7 +86,7 @@ class BebidasController
                 throw new \Exception("Capacidade da seção excedida! Total após cadastro: {$novo_total}ml / Limite: {$secao['capacidade_ml']}ml");
             }
 
-            // 4️⃣ Se tudo OK, cria a bebida
+            //  Se tudo belezinha, cria a bebida
             $id = Bebida::criar($dados);
 
             Flight::json(['mensagem' => 'Bebida criada com sucesso!', 'id' => $id], 201);

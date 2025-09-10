@@ -8,7 +8,7 @@ function MovementForm({ bebidas, secoes, onSubmit }) {
     quantidade: "",
     responsavel: "",
     descricao: "",
-    tipo_bebida: "ALCOOLICA", // ← CAMPO FALTANDO
+    tipo_bebida: "ALCOOLICA", 
   });
 
   function handleChange(e) {
@@ -26,7 +26,7 @@ function MovementForm({ bebidas, secoes, onSubmit }) {
       quantidade: "",
       responsavel: "",
       descricao: "",
-      tipo_bebida: "ALCOOLICA", // ← RESETAR TAMBÉM
+      tipo_bebida: "ALCOOLICA",
     });
   }
 
